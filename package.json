@@ -1,0 +1,28 @@
+{
+  "name": "bcaf-bot",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Discord bot for all functionality that is exclusive to BCAF",
+  "main": "dist/src/main.js",
+  "scripts": {
+    "build": "tsc",
+    "postinstall": "npm build",
+    "start": "npm build && cd dist && node src/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Die-Coolen-Allgemeinen-Ficker/bcaf-bot.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Die-Coolen-Allgemeinen-Ficker/bcaf-bot/issues"
+  },
+  "homepage": "https://github.com/Die-Coolen-Allgemeinen-Ficker/bcaf-bot",
+  "engines": {
+    "node": "^20.9.0"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1"
+  }
+}
