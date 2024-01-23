@@ -6,6 +6,7 @@ import {
 } from '../util/enforceB';
 
 export default (oldChannel: GuildChannel, newChannel: GuildChannel) => {
-    if (!isValidB(newChannel.name))
+    const date = new Date();
+    if (!isValidB(newChannel.name) && !(date.getMonth() == 3 && date.getDate() == 1))
         newChannel.setName(bIfy(newChannel.name));
 };

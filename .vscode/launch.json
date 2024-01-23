@@ -9,7 +9,7 @@
                 "**/node_modules/**"
             ],
             "type": "node",
-            "cwd": "${workspaceFolder}/dist/src/",
+            "cwd": "${workspaceFolder}/dist/",
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js",
                 "!**/node_modules/**"

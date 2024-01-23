@@ -2,9 +2,13 @@
     "compilerOptions": {
         "target": "es2016",
         "module": "CommonJS",
-        "strict": true
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "sourceMap": true,
+        "outDir": "./dist"
     },
     "include": [
-        "src/**/*"
+        "src/**/*",
+        "test/**/*"
     ]
 }

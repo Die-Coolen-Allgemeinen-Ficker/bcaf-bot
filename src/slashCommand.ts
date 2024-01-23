@@ -4,7 +4,7 @@ import {
 } from 'discord.js';
 
 export class SlashCommand extends SlashCommandBuilder {
-    run: (interaction: ChatInputCommandInteraction) => Promise<void>;
+    run!: (interaction: ChatInputCommandInteraction) => Promise<void>;
 
     constructor () {
         super();

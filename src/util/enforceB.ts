@@ -3,5 +3,5 @@ export function isValidB (string: string) {
 }
 
 export function bIfy (string: string) {
-    return string.replace(/ [^0-9\(\)]/g, ' 🅱').replace(/^./, '🅱');
+    return string.replace(/ [^0-9\(\)🅱]/g, ' 🅱').replace(/^./, '🅱');
 }

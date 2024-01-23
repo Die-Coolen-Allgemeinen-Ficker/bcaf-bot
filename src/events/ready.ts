@@ -5,7 +5,7 @@ import { bcafBot } from '../main';
 export default () => {
     console.log('BCAF Bot is ready.');
 
-    bcafBot.client.user.setPresence({
+    bcafBot.client.user!.setPresence({
         activities: [
             {
                 type: ActivityType.Listening,

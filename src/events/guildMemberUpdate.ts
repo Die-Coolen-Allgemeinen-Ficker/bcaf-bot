@@ -6,6 +6,7 @@ import {
 } from '../util/enforceB';
 
 export default (oldMember: GuildMember, newMember: GuildMember) => {
-    if (!isValidB(newMember.nickname))
-        newMember.setNickname(bIfy(newMember.nickname));
+    const name = newMember.nickname || newMember.user.displayName;
+    if (!isValidB(name))
+        newMember.setNickname(bIfy(name));
 };
