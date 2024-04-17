@@ -18,7 +18,7 @@ export interface BasePlayerType {
 export abstract class MultiplayerGame<PlayerType extends BasePlayerType> {
     protected player1?: PlayerType;
     protected player2?: PlayerType;
-    protected winner?: User;
+    protected winner?: User | null;
     protected stopGame = false;
     private timeout?: NodeJS.Timeout;
     currentTurn?: PlayerType;

@@ -61,15 +61,6 @@ class BcafBot {
             const comp = require(resolve(__dirname, `interactions/components/${component}`)).default as Component<any>;
             return [ comp.prefix, comp ];
         }));
-
-        /*const componentDir = readdirSync(resolve(__dirname, 'interactions')).filter(subdirectory => subdirectory != 'slashCommands');
-        const components = [];
-        for (const dir of componentDir)
-            components.push(...readdirSync(resolve(__dirname, 'interactions/', dir)).filter(file => file.endsWith('.js')).map(file => `${dir}/${file}`));
-        this.components = new Collection(components.map(component => [
-            component.split('/')[1].slice(0, -3).toLowerCase(),
-            require(resolve(__dirname, `interactions/${component}`))
-        ]));*/
     }
 
     private subscribeEvents () {

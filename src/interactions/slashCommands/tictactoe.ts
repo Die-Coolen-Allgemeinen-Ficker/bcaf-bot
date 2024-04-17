@@ -99,6 +99,11 @@ export class TicTacToeGame extends MultiplayerGame<TicTacToePlayer> {
         this.positions.set(`${position.x}_${position.y}`, this.currentTurn!.color);
         this.currentTurn!.positions.push(position);
 
+        if (this.positions.size == this.size ** 2) {
+            this.winner = null;
+            return this.gameOver();
+        }
+
         if (this.hasRow(this.currentTurn!.positions)) {
             this.winner = this.currentTurn!.user;
             return this.gameOver();
@@ -112,8 +117,8 @@ export class TicTacToeGame extends MultiplayerGame<TicTacToePlayer> {
         const embed = new EmbedBuilder()
         .setColor(`#36393f`)
         .setTitle('Tic Tac Toe')
-        .setThumbnail(this.currentTurn!.user.avatarURL()!)
-        .setDescription(this.stopGame ? `${this.winner!.username} hat gewonnen.` : `${this.currentTurn!.color == Color.BLUE ? '🟦' : ''} **${this.currentTurn!.user.username}** ist dran.`);
+        .setThumbnail(this.winner?.avatarURL()! || this.currentTurn!.user.avatarURL()!)
+        .setDescription(this.stopGame ? `${this.winner === null ? 'Es ist ein Unentschieden' : `${this.winner!.username} hat gewonnen.`}` : `${this.currentTurn!.color == Color.BLUE ? '🟦' : ''} **${this.currentTurn!.user.username}** ist dran.`);
         this.player1!.message.edit({ embeds: [ embed ], components: this.components(this.stopGame) });
     }
 
