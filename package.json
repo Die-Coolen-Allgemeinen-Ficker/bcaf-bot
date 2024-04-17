@@ -1,14 +1,14 @@
 {
   "name": "bcaf-bot",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Discord bot for all functionality that is exclusive to BCAF",
-  "main": "dist/main.js",
+  "main": "dist/src/main.js",
   "scripts": {
     "build": "tsc && copy .env ./dist/ -force",
     "postinstall": "npm run build",
     "test": "jest",
-    "start": "cd dist && node main.js"
+    "start": "cd dist && node src/main.js"
   },
   "repository": {
     "type": "git",

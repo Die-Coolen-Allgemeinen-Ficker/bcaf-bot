@@ -16,7 +16,7 @@ export default new SlashCommand()
 )
 .setRun(async (interaction: ChatInputCommandInteraction) => {
     const channels: any = {};
-    bcafBot.client.guilds.cache.get('555729962188144660')!.channels.cache.forEach(channel => { channels[channel.id] = channel.name; });
+    bcafBot.client.guilds.cache.get(process.env.GUILD_ID!)!.channels.cache.filter(channel => !channel.isThread()).forEach(channel => { channels[channel.id] = channel.name; });
 
     const mapping: any = { channels };
 
