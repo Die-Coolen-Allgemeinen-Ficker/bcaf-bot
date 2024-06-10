@@ -5,7 +5,7 @@ import {
     isValidB
 } from '../util/enforceB';
 
-export default (oldRole: Role, newRole: Role) => {
+export default (_: Role, newRole: Role) => {
     if (!isValidB(newRole.name))
         newRole.setName(bIfy(newRole.name));
 };

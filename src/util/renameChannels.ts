@@ -10,7 +10,7 @@ export function renameChannels (mappingPath: string) {
         try {
             const channel = bcafBot.client.channels.cache.get(channelId) as GuildBasedChannel | null;
             if (!channel) {
-                console.log(`Couldn't find channel: ${channelId}`);
+                console.error(`Couldn't find channel: ${channelId}`);
                 continue;
             }
             if (newName.length > 100)
@@ -18,7 +18,7 @@ export function renameChannels (mappingPath: string) {
             else
                 channel.setName(newName);
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 }

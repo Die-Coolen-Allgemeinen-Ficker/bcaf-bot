@@ -1,11 +1,11 @@
 {
   "name": "bcaf-bot",
   "private": true,
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Discord bot for all functionality that is exclusive to BCAF",
   "main": "dist/src/main.js",
   "scripts": {
-    "build": "tsc && copy .env ./dist/ -force",
+    "build": "tsc",
     "postinstall": "npm run build",
     "test": "jest",
     "start": "cd dist && node src/main.js"
@@ -24,7 +24,8 @@
   },
   "dependencies": {
     "discord.js": "^14.14.1",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "mongodb": "^6.5.0"
   },
   "devDependencies": {
     "jest": "^29.7.0",

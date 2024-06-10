@@ -95,7 +95,7 @@ export abstract class MultiplayerGame<PlayerType extends BasePlayerType> {
             this.winner = this.player2!.user;
         else
             this.winner = this.player1!.user;
-        this.currentTurn!.user.send({ content: 'Du hast länger als zwei Minuten für deinen Zug gebraucht und hast verloren.' });
+        this.currentTurn!.user.send({ content: 'Du hast länger als zwei Minuten für deinen Zug gebraucht und hast verloren.' }).catch();
 
         this.gameOver();
     }

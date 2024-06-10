@@ -97,7 +97,7 @@ export default new SlashCommand()
 
         await interaction.reply({ content: 'Embed wurde geschickt.', ephemeral: true });
     } catch (error) {
-        console.log(`Could not create Embed:`, error);
+        console.error(`Could not create Embed:`, error);
         await interaction.reply({ content: `Das Embed ist ungültig: \`\`\`\n${error}\`\`\``, ephemeral: true });
     }
 })

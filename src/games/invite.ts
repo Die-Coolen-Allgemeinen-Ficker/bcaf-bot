@@ -25,7 +25,7 @@ export class Invite extends EventEmitter {
             .setStyle(ButtonStyle.Danger)
             .setCustomId('INVITE_DECLINE')
             .setDisabled(disabled)
-        ).toJSON()
+        )
     ];
 
     private sender: User;
@@ -56,18 +56,18 @@ export class Invite extends EventEmitter {
         .setThumbnail(this.sender.avatarURL()!);
 
         const channel = this.channel || this.receiver;
-        this.message = await channel?.send({ content: `<@${this.receiver.id}>`, embeds: [ embed ], components: Invite.components(false) });
+        this.message = await channel?.send({ content: `<@${this.receiver.id}>`, embeds: [ embed ], components: Invite.components(false) }).catch();
 
         if (!this.message) {
             this.emit('error');
-            this.sender.send('Die Einladung konnte nicht erstellt werden.');
+            this.sender.send('Die Einladung konnte nicht erstellt werden.').catch();
             return;
         }
 
         this.inviteTimeout = setTimeout(() => {
             embed.setTitle(`Einladung von ${this.sender.username} [Abgelaufen]`);
             this.message!.edit({ content: `<@${this.receiver.id}>`, embeds: [ embed ], components: Invite.components(true) });
-            this.sender.send(`<@${this.sender.id}>, ${this.receiver.username} hat die Einladung nicht rechtzeitig angenommen.`);
+            this.sender.send(`<@${this.sender.id}>, ${this.receiver.username} hat die Einladung nicht rechtzeitig angenommen.`).catch();
 
             this.emit('timeout');
             Invite.pendingInvites.delete(this.message!.id);
@@ -88,8 +88,8 @@ export class Invite extends EventEmitter {
             const message = await this.channel.send({ embeds: [ embed ] });
             this.emit('reply', [ message ]);
         } else {
-            const player1Message = await this.sender.send({ embeds: [ embed ] });
-            const player2Message = await this.receiver.send({ embeds: [ embed ] });
+            const player1Message = await this.sender.send({ embeds: [ embed ] }).catch();
+            const player2Message = await this.receiver.send({ embeds: [ embed ] }).catch();
             this.emit('reply', [ player1Message, player2Message ]);
         }
 
@@ -105,7 +105,7 @@ export class Invite extends EventEmitter {
 
         clearTimeout(this.inviteTimeout!);
 
-        this.sender.send({ embeds: [ embed ] });
+        this.sender.send({ embeds: [ embed ] }).catch();
         this.message!.delete();
 
         this.emit('reply');

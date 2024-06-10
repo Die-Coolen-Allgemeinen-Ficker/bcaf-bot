@@ -51,7 +51,7 @@ export class TicTacToeGame extends MultiplayerGame<TicTacToePlayer> {
             }
         }
 
-        return components.map(component => component.toJSON());
+        return components;
     };
 
     private size: number;

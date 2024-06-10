@@ -2,16 +2,22 @@ import {
     Client,
     Collection,
     GatewayIntentBits,
+    Guild,
     REST,
     Routes
 } from 'discord.js';
+import {
+    Db,
+    MongoClient
+} from 'mongodb';
 import { config } from 'dotenv';
-import { readdirSync } from 'fs';
+import { readdirSync, readFileSync } from 'fs';
 import { resolve } from 'path';
 
 import { SlashCommand } from './slashCommand';
 import { Component } from './component';
 import { TimedEvent } from './timedEvent';
+import { BCAFAccount } from './account/bcafAccount';
 
 config();
 
@@ -19,6 +25,10 @@ class BcafBot {
     client: Client;
     slashCommands!: Collection<string, SlashCommand>;
     components!: Collection<string, Component<any>>;
+    bcaf!: Guild;
+
+    mongoDbClient!: MongoClient;
+    bcafDb!: Db
 
     constructor () {
         this.client = new Client({
@@ -34,10 +44,10 @@ class BcafBot {
         this.subscribeEvents();
         this.subscribeTimedEvents();
 
-        this.client.login(process.env.DISCORD_TOKEN!);
+        this.asyncInit();
     }
 
-    private async registerInteractions () {
+    private registerInteractions () {
         // Slash Commands
         const slashCommands = readdirSync(resolve(__dirname, 'interactions/slashCommands/')).filter(file => file.endsWith('.js'));
         this.slashCommands = new Collection(slashCommands.map(slashCommand => [
@@ -52,7 +62,7 @@ class BcafBot {
             });
             console.log(`Registered slash commands: ${this.slashCommands.map(slashCommand => slashCommand.name).join(', ')}`);
         } catch (error) {
-            console.log('Failed to register slash commands:', error);
+            console.error('Failed to register slash commands:', error);
         }
 
         // Interaction Components
@@ -80,6 +90,18 @@ class BcafBot {
             const timeUntil = timedEvent.schedule();
             console.log(`Subscribed timed event. Time until: ${timeUntil}`);
         }
+    }
+
+    private async asyncInit () {
+        await this.client.login(process.env.DISCORD_TOKEN!);
+        this.bcaf = this.client.guilds.cache.get(process.env.GUILD_ID!)!;
+
+        this.mongoDbClient = new MongoClient(process.env.MONGODB_CONNECTION_STRING!);
+        await this.mongoDbClient.connect();
+        this.bcafDb = this.mongoDbClient.db('bcaf-user-data');
+
+        if (process.env.MODE! == 'DEBUG')
+            BCAFAccount.loadLegacyData(JSON.parse(readFileSync('./profiles.json').toString()));
     }
 }
 
