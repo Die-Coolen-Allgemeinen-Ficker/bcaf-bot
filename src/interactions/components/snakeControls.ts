@@ -37,4 +37,4 @@ export default new Component<ButtonInteraction>()
                 interaction.reply({ content: 'Dieses Snake Spiel wurde nicht von dir gestartet.', ephemeral: true });
         } else
             interaction.deferUpdate();
-})
+});

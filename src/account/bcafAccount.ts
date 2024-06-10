@@ -125,6 +125,12 @@ export class BCAFAccount {
             if (!user || user.bot || !member)
                 continue;
 
+            const accounts = bcafBot.bcafDb.collection('accounts');
+            const result = (await accounts.findOne({ userId: userId })) as unknown as AccountData | null;
+
+            if (result)
+                continue;
+
             const legacyProfile = data.users[userId];
 
             const uuid = await new Promise<string>(resolve => {
