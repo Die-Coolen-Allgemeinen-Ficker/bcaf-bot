@@ -39,6 +39,7 @@ class BcafBot {
                 GatewayIntentBits.Guilds,
                 GatewayIntentBits.GuildMessages,
                 GatewayIntentBits.GuildMembers,
+                GatewayIntentBits.GuildPresences,
                 GatewayIntentBits.MessageContent
             ]
         });

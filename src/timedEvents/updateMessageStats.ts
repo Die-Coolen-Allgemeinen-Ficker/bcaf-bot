@@ -77,7 +77,7 @@ export default new TimedEvent(
 
         for (const id of cumulated.keys()) {
             const stats = cumulated.get(id)!;
-            const level = 1 + Math.sqrt(stats.messageCount * 0.5 - 0.5);
+            const level = stats.messageCount < 1 ? 1 : (1 + Math.sqrt(stats.messageCount * 0.5 - 0.5));
             const bcafShare = 0.25 * (stats.messageCount / cumulatedTotal) + 0.75 * (stats.messagesLast30Days / cumulatedTotalLast30Days);
 
             const account = await BCAFAccount.fetch(id);

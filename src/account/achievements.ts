@@ -18,7 +18,7 @@ export async function grantAchievement (account: BCAFAccount, achievement: Achie
     if (!channel)
         channel = bcafBot.bcaf.channels.cache.get('555729962188144662') as TextChannel;
 
-    if (account.getData().profile.achievements.find(a => a.name == achievement.name))
+    if (account.getData().profile.achievements.some(a => a.name == achievement.name))
         return;
 
     await account.update({ profile: { achievements: [ ...account.getData().profile.achievements, achievement ] } });
