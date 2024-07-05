@@ -21,6 +21,10 @@ async function fetchMessages (channel: TextChannel, timestamp: number) {
         })).values() ];
 
         for (const message of results) {
+            total++;
+            if (message.createdTimestamp > timestamp)
+                totalLast30Days++;
+
             if (message.author.bot)
                 continue;
 
@@ -30,9 +34,6 @@ async function fetchMessages (channel: TextChannel, timestamp: number) {
                 messagesLast30Days: (cumulated?.messagesLast30Days || 0) + (message.createdTimestamp >= timestamp ? 1 : 0),
                 characterCount: (cumulated?.characterCount || 0) + message.content.length
             });
-            total += 1;
-            if (message.createdTimestamp > timestamp)
-                totalLast30Days += 1;
         }
     } while (results.length);
 
