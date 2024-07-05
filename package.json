@@ -1,7 +1,7 @@
 {
   "name": "bcaf-bot",
   "private": true,
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Discord bot for all functionality that is exclusive to BCAF",
   "main": "dist/src/main.js",
   "scripts": {

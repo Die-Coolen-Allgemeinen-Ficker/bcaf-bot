@@ -1,8 +1,18 @@
-import { Interaction } from 'discord.js';
+import {
+    ChatInputCommandInteraction,
+    Interaction,
+    MessageComponentInteraction
+} from 'discord.js';
+import { config } from 'dotenv';
 
 import { bcafBot } from '../main';
 
+config();
+
 export default async (interaction: Interaction) => {
+    if (process.env.MODE! == 'DEBUG' && !(interaction.user.id == '432930043199750164' || interaction.user.id == '982673943041278023'))
+        return await (interaction as ChatInputCommandInteraction | MessageComponentInteraction).reply({ content: 'Der Debug Modus ist aktiviert.', ephemeral: true });
+
     if (interaction.isChatInputCommand()) {
         const slashCommand = bcafBot.slashCommands.get(interaction.commandName);
         if (!slashCommand) {

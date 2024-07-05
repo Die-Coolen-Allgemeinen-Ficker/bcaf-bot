@@ -9,6 +9,8 @@ export default () => {
     console.log('BCAF Bot is ready.');
 
     if (process.env.MODE == 'DEBUG') {
+        console.log('Running debug mode.');
+
         bcafBot.client.user!.setPresence({
             activities: [
                 {

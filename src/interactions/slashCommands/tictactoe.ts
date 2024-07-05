@@ -115,7 +115,7 @@ export class TicTacToeGame extends MultiplayerGame<TicTacToePlayer> {
 
     updateEmbeds () {
         const embed = new EmbedBuilder()
-        .setColor(`#36393f`)
+        .setColor(`#2b2d31`)
         .setTitle('Tic Tac Toe')
         .setThumbnail(this.winner?.avatarURL()! || this.currentTurn!.user.avatarURL()!)
         .setDescription(this.stopGame ? `${this.winner === null ? 'Es ist ein Unentschieden' : `${this.winner!.username} hat gewonnen.`}` : `${this.currentTurn!.color == Color.BLUE ? '🟦' : ''} **${this.currentTurn!.user.username}** ist dran.`);

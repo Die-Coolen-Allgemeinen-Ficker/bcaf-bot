@@ -213,7 +213,7 @@ export class SnakeGame {
 
         const user = bcafBot.client.users.cache.get(this.sessionData.userId)!;
         const embed = new EmbedBuilder()
-        .setColor(`#36393f`)
+        .setColor(`#2b2d31`)
         .setTitle('**Snake**')
         .addFields({ name: gameOver ? `**[GAME OVER]** ${gameOverMessages[Math.floor(Math.random() * gameOverMessages.length)]} | Score: ${this.score}\nSpieler: ${user.username}` : `Score: ${this.score}\nSpieler: ${user.username}`, value: gameArea })
         .setThumbnail(user.avatarURL()!);
@@ -248,7 +248,7 @@ export default new SlashCommand()
     const small = interaction.options.getBoolean('klein');
 
     const embed = new EmbedBuilder()
-    .setColor(`#36393f`)
+    .setColor(`#2b2d31`)
     .setTitle('*Spiel wird gestartet...*');
     const messageId = await (bcafBot.client.channels.cache.get(interaction.channel!.id) as TextChannel).send({ embeds: [ embed ] }).then(message => message.id);
 

@@ -103,9 +103,6 @@ class BcafBot {
         this.mongoDbClient = new MongoClient(process.env.MONGODB_CONNECTION_STRING!);
         await this.mongoDbClient.connect();
         this.bcafDb = this.mongoDbClient.db('bcaf-user-data');
-
-        if (process.env.MODE! == 'DEBUG')
-            BCAFAccount.loadLegacyData(JSON.parse(readFileSync('./profiles.json').toString()));
     }
 }
 

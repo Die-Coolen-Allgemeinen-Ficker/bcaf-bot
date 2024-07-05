@@ -6,10 +6,9 @@ import {
 import { BCAFAccount } from '../account/bcafAccount';
 import { bcafBot } from '../main';
 import { TimedEvent } from '../timedEvent';
-import { grantAchievement } from '../account/achievements';
 
 async function fetchMessages (channel: TextChannel, timestamp: number) {
-    const counts = new Map<string, { messageCount: number; messagesLast30Days: number; }>();
+    const counts = new Map<string, { messageCount: number; messagesLast30Days: number; characterCount: number; }>();
     const first = (await channel.messages.fetch({ limit: 1 })).first()!;
     let results: Message[] = [];
     let total = 0;
@@ -28,11 +27,12 @@ async function fetchMessages (channel: TextChannel, timestamp: number) {
             const cumulated = counts.get(message.author.id);
             counts.set(message.author.id, {
                 messageCount: (cumulated?.messageCount || 0) + 1,
-                messagesLast30Days: (cumulated?.messagesLast30Days || 0) + (message.createdTimestamp >= timestamp ? 1 : 0)
+                messagesLast30Days: (cumulated?.messagesLast30Days || 0) + (message.createdTimestamp >= timestamp ? 1 : 0),
+                characterCount: (cumulated?.characterCount || 0) + message.content.length
             });
-            total += 1;
+            total++;
             if (message.createdTimestamp > timestamp)
-                totalLast30Days += 1;
+                totalLast30Days++;
         }
     } while (results.length);
 
@@ -49,7 +49,7 @@ export default new TimedEvent(
     async () => {
         console.log('Updating message stats...');
 
-        const cumulated = new Map<string, { messageCount: number; messagesLast30Days: number; }>();
+        const cumulated = new Map<string, { messageCount: number; messagesLast30Days: number; characterCount: number; }>();
         let cumulatedTotal = 0;
         let cumulatedTotalLast30Days = 0;
 
@@ -60,9 +60,9 @@ export default new TimedEvent(
 
             console.log(`Looking through ${channel.name}`);
 
-            const now = new Date();
-            now.setDate(now.getDate() - 30);
-            const { counts, total, totalLast30Days } = await fetchMessages(channel, now.getTime());
+            const oneMonthAgo = new Date();
+            oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
+            const { counts, total, totalLast30Days } = await fetchMessages(channel, oneMonthAgo.getTime());
             cumulatedTotal += total;
             cumulatedTotalLast30Days += totalLast30Days;
 
@@ -70,23 +70,25 @@ export default new TimedEvent(
                 const stats = cumulated.get(id);
                 cumulated.set(id, {
                     messageCount: (stats?.messageCount || 0) + counts.get(id)!.messageCount,
-                    messagesLast30Days: (stats?.messagesLast30Days || 0) + counts.get(id)!.messagesLast30Days
+                    messagesLast30Days: (stats?.messagesLast30Days || 0) + counts.get(id)!.messagesLast30Days,
+                    characterCount: (stats?.characterCount || 0) + counts.get(id)!.characterCount
                 });
             }
         }
 
         for (const id of cumulated.keys()) {
             const stats = cumulated.get(id)!;
-            const level = stats.messageCount < 1 ? 1 : (1 + Math.sqrt(stats.messageCount * 0.5 - 0.5));
+            const level = 1 + Math.sqrt((3267 / 231400) * stats.characterCount);
+            const yapOMeter = stats.characterCount / stats.messageCount;
             const bcafShare = 0.25 * (stats.messageCount / cumulatedTotal) + 0.75 * (stats.messagesLast30Days / cumulatedTotalLast30Days);
 
-            const account = await BCAFAccount.fetch(id);
+            const account = await BCAFAccount.fetch(id, false);
             if (account) {
                 console.log(`Updating user ${account.user.username}`);
-                account.update({ profile: { messageStats: { messageCount: stats.messageCount, messagesLast30Days: stats.messagesLast30Days }, level } });
+                account.update({ profile: { messageStats: { messageCount: stats.messageCount, messagesLast30Days: stats.messagesLast30Days, yapOMeter }, level } });
 
                 if (stats.messagesLast30Days >= 2000)
-                    grantAchievement(account, {
+                    account.grantAchievement({
                         name: 'alive chat wtf???',
                         description: 'Schicke 2000 Nachrichten innerhalb von 30 Tagen.'
                     });

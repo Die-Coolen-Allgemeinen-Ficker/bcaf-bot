@@ -1,8 +1,10 @@
-import { User } from 'discord.js';
+import { EmbedBuilder, TextChannel, User } from 'discord.js';
 import { request } from 'https';
+import { config } from 'dotenv';
 
 import { bcafBot } from '../main';
-import { Achievement } from './achievements';
+
+config();
 
 function mergeObjects (obj1: any, obj2: RecursivePartial<any>) {
     for (const key of Object.keys(obj1)) {
@@ -14,6 +16,12 @@ function mergeObjects (obj1: any, obj2: RecursivePartial<any>) {
         else
             obj1[key] = obj2[key];
     }
+}
+
+export interface Achievement {
+    name: string;
+    description: string;
+    timestamp?: number;
 }
 
 export interface AccountData {
@@ -39,6 +47,7 @@ export interface AccountData {
             bReactionCount: number;
             messageCount: number;
             messagesLast30Days: number;
+            yapOMeter: number;
         };
         achievements: Achievement[];
     };
@@ -62,7 +71,7 @@ export class BCAFAccount {
         this.data = data;
     }
 
-    static async fetch (userId: string) {
+    static async fetch (userId: string, forceCreate: boolean = true) {
         const member = await bcafBot.bcaf.members.fetch(userId).catch(_ => null);
         const user = member?.user;
 
@@ -73,6 +82,9 @@ export class BCAFAccount {
         let accountData = (await accounts.findOne({ userId: userId })) as unknown as AccountData | null;
 
         if (!accountData) {
+            if (!forceCreate)
+                return null;
+
             accountData = {
                 userId,
                 name: user.globalName || user.username,
@@ -95,7 +107,8 @@ export class BCAFAccount {
                         nWordCount: 0,
                         bReactionCount: 0,
                         messageCount: 0,
-                        messagesLast30Days: 0
+                        messagesLast30Days: 0,
+                        yapOMeter: 0
                     },
                     achievements: []
                 },
@@ -168,7 +181,8 @@ export class BCAFAccount {
                         nWordCount: 0,
                         bReactionCount: 0,
                         messageCount: 0,
-                        messagesLast30Days: 0
+                        messagesLast30Days: 0,
+                        yapOMeter: 0
                     },
                     achievements: []
                 },
@@ -191,11 +205,34 @@ export class BCAFAccount {
     }
 
     async update (data: RecursivePartial<AccountData>) {
+        if (process.env.MODE! == 'DEBUG')
+            return console.log(`Update ${this.user.username} with: `, data);
+
         const accounts = bcafBot.bcafDb.collection('accounts');
         const accountData = (await accounts.findOne({ userId: this.user.id })) as unknown as AccountData;
         mergeObjects(accountData, data);
         accountData.updatedTimestamp = Date.now();
         this.data = accountData;
         await accounts.replaceOne({ userId: this.user.id }, this.data);
+    }
+
+    async grantAchievement (achievement: Achievement, channel?: TextChannel) {
+        if (process.env.MODE! == 'DEBUG')
+            return console.log(`Grant Achievement to ${this.user.username}: `, achievement);
+
+        achievement.timestamp = Date.now();
+    
+        if (!channel)
+            channel = bcafBot.bcaf.channels.cache.get('555729962188144662') as TextChannel;
+    
+        if (this.getData().profile.achievements.some(a => a.name == achievement.name))
+            return;
+    
+        await this.update({ profile: { achievements: [ ...this.getData().profile.achievements, achievement ] } });
+        const embed = new EmbedBuilder()
+        .setTitle('Achievement')
+        .setDescription(`${this.user.toString()}, du hast ein Achievement bekommen!\n**${achievement.name}** - ${achievement.description}`)
+        .setColor('#2b2d31');
+        channel.send({ embeds: [ embed ] });
     }
 }

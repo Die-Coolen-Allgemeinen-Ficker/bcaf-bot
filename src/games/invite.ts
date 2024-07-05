@@ -50,7 +50,7 @@ export class Invite extends EventEmitter {
 
     private async setup () {
         const embed = new EmbedBuilder()
-        .setColor(`#36393f`)
+        .setColor(`#2b2d31`)
         .setTitle(`Einladung von ${this.sender.username}`)
         .setDescription(`**${this.sender.username}** möchte mit dir ${this.game} spielen, du hast 30 Sekunden Zeit zum annehmen.`)
         .setThumbnail(this.sender.avatarURL()!);
@@ -78,7 +78,7 @@ export class Invite extends EventEmitter {
 
     async accept () {
         const embed = new EmbedBuilder()
-        .setColor(`#36393f`)
+        .setColor(`#2b2d31`)
         .setTitle(this.game)
         .setDescription('*Spiel wird gestartet...*');
 
