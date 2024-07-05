@@ -30,9 +30,9 @@ async function fetchMessages (channel: TextChannel, timestamp: number) {
                 messagesLast30Days: (cumulated?.messagesLast30Days || 0) + (message.createdTimestamp >= timestamp ? 1 : 0),
                 characterCount: (cumulated?.characterCount || 0) + message.content.length
             });
-            total++;
+            total += 1;
             if (message.createdTimestamp > timestamp)
-                totalLast30Days++;
+                totalLast30Days += 1;
         }
     } while (results.length);
 
