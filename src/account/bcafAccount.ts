@@ -8,7 +8,7 @@ config();
 
 function mergeObjects (obj1: any, obj2: RecursivePartial<any>) {
     for (const key of Object.keys(obj1)) {
-        if (!obj2[key])
+        if (obj2[key] === undefined)
             continue;
 
         if (typeof obj2[key] == 'object' && !Array.isArray(obj2[key]))
@@ -58,6 +58,7 @@ export interface AccountData {
     legacy: boolean;
     createdTimestamp: number;
     updatedTimestamp: number;
+    _hidden: boolean;
 }
 
 type RecursivePartial<T> = { [key in keyof T]?: T[key] extends object ? RecursivePartial<T[key]> : T[key] };
@@ -118,7 +119,8 @@ export class BCAFAccount {
                 bcafJoinTimestamp: member.joinedTimestamp!,
                 legacy: false,
                 createdTimestamp: Date.now(),
-                updatedTimestamp: Date.now()
+                updatedTimestamp: Date.now(),
+                _hidden: false
             } as AccountData;
 
             await accounts.insertOne(accountData);
@@ -192,7 +194,8 @@ export class BCAFAccount {
                 bcafJoinTimestamp: member.joinedTimestamp!,
                 legacy: true,
                 createdTimestamp: Date.now(),
-                updatedTimestamp: Date.now()
+                updatedTimestamp: Date.now(),
+                _hidden: false
             } as AccountData);
         }
 
