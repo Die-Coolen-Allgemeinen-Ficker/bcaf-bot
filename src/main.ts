@@ -11,16 +11,12 @@ import {
     MongoClient
 } from 'mongodb';
 import { config } from 'dotenv';
-import {
-    readdirSync,
-    readFileSync
-} from 'fs';
+import { readdirSync } from 'fs';
 import { resolve } from 'path';
 
 import { SlashCommand } from './slashCommand';
 import { Component } from './component';
 import { TimedEvent } from './timedEvent';
-import { BCAFAccount } from './account/bcafAccount';
 
 config();
 
