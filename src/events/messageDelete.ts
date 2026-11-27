@@ -1,33 +1,24 @@
 import {
-    EmbedBuilder,
     Message,
-    TextChannel
+    TextChannel,
+    WebhookClient
 } from 'discord.js';
 
-import { bcafBot } from '../main';
 import { BCAFAccount } from '../account/bcafAccount';
+import { config } from 'dotenv';
+
+config();
+const webhookClient = new WebhookClient({ url: process.env.ISWYD_WEBHOOK_URL! });
 
 export default async (message: Message) => {
     if (message.channelId == '1256689378852606023')
         return;
 
-    const iSawWhatYouDeleted = bcafBot.bcaf.channels.cache.get('1256689378852606023') as TextChannel;
-    const embed = new EmbedBuilder()
-    .setTitle('I saw what you deleted')
-    .setColor('#2b2d31')
-    .setDescription(message.content.length == 0 ? 'Kein Textinhalt' : message.content)
-    .addFields(
-        { name: 'Author', value: `${message.author.toString()}` },
-        { name: 'Channel', value: `${message.channel.toString()}` },
-        { name: 'Send time', value: `<t:${Math.floor(message.createdTimestamp * 0.001)}>` },
-        ...message.attachments.map(attachment => {
-            return {
-                name: attachment.name,
-                value: attachment.url
-            }
-        })
-    );
-    await iSawWhatYouDeleted.send({ embeds: [ embed ] });
+    webhookClient.send({
+        content: `In ${message.channel.toString()} at <t:${Math.floor(message.createdTimestamp * 0.001)}>:\n${message.content}\n${message.attachments.map(attachment => attachment.url).join(' ')}`.slice(0, 1999),
+        username: message.member?.nickname || message.author.displayName || message.author.username,
+        avatarURL: message.author.avatarURL() || undefined
+    });
 
     if (message.author.bot)
         return;

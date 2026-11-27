@@ -8,13 +8,6 @@ import { SlashCommand } from '../../slashCommand';
 import { BCAFAccount } from '../../account/bcafAccount';
 
 export default new SlashCommand()
-.setName('pookiebear')
-.setDescription('Gibt das Pookie Bear Achievement')
-.addUserOption(option =>
-    option.setName('benutzer')
-    .setDescription('My little pookie bear :3')
-    .setRequired(true)
-)
 .setRun(async (interaction: ChatInputCommandInteraction) => {
     const user = interaction.options.getUser('benutzer', true);
     if (user.id == interaction.user.id) {
@@ -32,4 +25,11 @@ export default new SlashCommand()
     }, interaction.channel as TextChannel);
     interaction.reply({ content: `${user.toString()} ist dein Pookie Bear :3`, ephemeral: true });
 })
+.setName('pookiebear')
+.setDescription('Gibt das Pookie Bear Achievement')
+.addUserOption(option =>
+    option.setName('benutzer')
+    .setDescription('My little pookie bear :3')
+    .setRequired(true)
+)
 .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);

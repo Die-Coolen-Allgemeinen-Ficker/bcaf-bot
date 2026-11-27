@@ -7,13 +7,6 @@ import { SlashCommand } from '../../slashCommand';
 import { bcafBot } from '../../main';
 
 export default new SlashCommand()
-.setName('generatechannelnamemappings')
-.setDescription('Generiert ein Mapping von allen Kanalnamen.')
-.addBooleanOption(option =>
-    option.setName('includedefaultfield')
-    .setDescription('Ob ein `_default` Field zum Zurücksetzen vorhanden sein soll.')
-    .setRequired(true)
-)
 .setRun(async (interaction: ChatInputCommandInteraction) => {
     const channels: any = {};
     bcafBot.bcaf.channels.cache.filter(channel => !channel.isThread()).forEach(channel => { channels[channel.id] = channel.name; });
@@ -25,4 +18,11 @@ export default new SlashCommand()
 
     await interaction.reply({ files: [ { attachment: Buffer.from(JSON.stringify(mapping).replace(/,/g, ',\n')), name: `channel_mapping_${Date.now()}.json` } ], ephemeral: true });
 })
+.setName('generatechannelnamemappings')
+.setDescription('Generiert ein Mapping von allen Kanalnamen.')
+.addBooleanOption(option =>
+    option.setName('includedefaultfield')
+    .setDescription('Ob ein `_default` Field zum Zurücksetzen vorhanden sein soll.')
+    .setRequired(true)
+)
 .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
