@@ -130,6 +130,21 @@ export class TicTacToeGame extends MultiplayerGame<TicTacToePlayer> {
 }
 
 export default new SlashCommand()
+.setRun(async (interaction: ChatInputCommandInteraction) => {
+    const player1 = interaction.user;
+    const player2 = interaction.options.getUser('spieler', true);
+    const size = interaction.options.getNumber('spielfeld', true);
+
+    await interaction.deferReply({ ephemeral: true });
+
+    new TicTacToeGame(
+        player1,
+        player2,
+        interaction,
+        interaction.channel as TextChannel,
+        size
+    );
+})
 .setName('tictactoe')
 .setDescription('Startet ein Tic Tac Toe Spiel')
 .addUserOption(option =>
@@ -146,19 +161,4 @@ export default new SlashCommand()
         { name: '5 x 5', value: 5 }
     )
     .setRequired(true)
-)
-.setRun(async (interaction: ChatInputCommandInteraction) => {
-    const player1 = interaction.user;
-    const player2 = interaction.options.getUser('spieler', true);
-    const size = interaction.options.getNumber('spielfeld', true);
-
-    await interaction.deferReply({ ephemeral: true });
-
-    new TicTacToeGame(
-        player1,
-        player2,
-        interaction,
-        interaction.channel as TextChannel,
-        size
-    );
-});
+);

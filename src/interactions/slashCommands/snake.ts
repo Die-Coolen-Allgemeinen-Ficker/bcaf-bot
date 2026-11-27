@@ -233,12 +233,6 @@ export class SnakeGame {
 }
 
 export default new SlashCommand()
-.setName('snake')
-.setDescription('Startet ein Snake Spiel')
-.addBooleanOption(option =>
-    option.setName('klein')
-    .setDescription('Kleines Spielfeld für kleine Bildschirme (8x8)')
-)
 .setRun(async (interaction: ChatInputCommandInteraction) => {
     if (SnakeGame.activeGames.size) {
         interaction.reply({ content: 'Es läuft bereits ein Spiel.', ephemeral: true });
@@ -259,4 +253,10 @@ export default new SlashCommand()
     }, small ? 8 : 11));
 
     interaction.reply({ content: 'Das Spiel wurde gestartet.', ephemeral: true });
-});
+})
+.setName('snake')
+.setDescription('Startet ein Snake Spiel')
+.addBooleanOption(option =>
+    option.setName('klein')
+    .setDescription('Kleines Spielfeld für kleine Bildschirme (8x8)')
+);

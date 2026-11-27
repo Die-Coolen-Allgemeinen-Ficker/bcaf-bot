@@ -8,7 +8,8 @@ import { BCAFAccount } from '../account/bcafAccount';
 
 export default async (_: GuildMember, newMember: GuildMember) => {
     const name = newMember.nickname || newMember.user.displayName;
-    if (!isValidB(name)) {
+    const date = new Date();
+    if (!isValidB(name) && !(date.getMonth() == 3 && (date.getDate() == 1 || date.getDate() == 2))) {
         newMember.setNickname(bIfy(name)).catch();
         const account = await BCAFAccount.fetch(newMember.id);
         await account?.grantAchievement({

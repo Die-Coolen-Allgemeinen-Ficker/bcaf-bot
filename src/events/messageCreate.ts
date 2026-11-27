@@ -5,12 +5,22 @@ import {
 
 import { BCAFAccount } from '../account/bcafAccount';
 import { coincidenceIThinkNot } from '../secretAchievements';
+import { Rcon } from 'rcon-client';
+import { config } from 'dotenv';
+
+config();
 
 const pings: { [userId: string]: number | undefined } = {};
 
 export default async (message: Message) => {
-    if (message.author.bot)
+    if (message.author.bot || message.webhookId)
         return;
+
+    // Minecraft SMP RCON
+    if (process.env.SMP_IP && message.channelId == '989600726646935612') {
+        const rcon = await Rcon.connect({ host: process.env.SMP_IP!, port: parseInt(process.env.SMP_RCON_PORT!, 10), password: process.env.SMP_RCON_PASSWORD! });
+        await rcon.send(`tellraw @a [{"text":"${message.author.globalName || message.author.username}: ","color":"dark_aqua"},{"text":"${message.content}","color":"aqua"}]`)
+    }
 
     // N-Word counter
     if (message.content.match(/n+(i|e|1)+g+r*(a|e|o|ö)+r*/i)) {
